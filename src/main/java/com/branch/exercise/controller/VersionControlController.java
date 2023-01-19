@@ -21,7 +21,7 @@ public class VersionControlController {
     @Autowired
     VersionControlService versionControlService;
 
-    @GetMapping("/user/{userName}")
+    @GetMapping("/users/{userName}")
     public ResponseEntity<VersionControlUserDto> getUserDataForUsername(@PathVariable("userName") String username) {
 
         logger.info(String.format("Getting version control data for %s", username));

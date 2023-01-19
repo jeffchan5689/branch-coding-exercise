@@ -4,7 +4,8 @@ Coding exercise for Jeff Chan
 
 ## Java version
 
-This project requires at least Java 17.
+This project requires Java 17.
+[Download Here](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
 
 ## Running the app
 
@@ -13,12 +14,14 @@ The following command ran in the root folder should start the application on por
 ./gradlew clean bootRun
 ```
 
+You may need to run `chmod +x gradlew` if the gradlew command has a permission issue.
+
 ## Using the app
 
 This app supports one endpoint
 
 ```
-{base URL}/version-control/user/{Github username}
+{base URL}/version-control/users/{Github username}
 ```
 
 If the Github username provided does not exist a 404 will be returned
