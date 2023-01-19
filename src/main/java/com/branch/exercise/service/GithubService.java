@@ -6,6 +6,7 @@ import com.branch.exercise.gateway.GithubGateway;
 import com.branch.exercise.gateway.dto.GithubRepoDto;
 import com.branch.exercise.gateway.dto.GithubUserDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Collectors;
@@ -16,6 +17,7 @@ public class GithubService {
     @Autowired
     GithubGateway githubGateway;
 
+    @Cacheable("username")
     public VersionControlDto getUserData(String username) {
         VersionControlDto versionControlUser = mapGithubUserToVersionControlUser(githubGateway.getGithubUserForUsername(username));
 
