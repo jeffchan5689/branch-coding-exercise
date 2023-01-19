@@ -4,10 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-import com.branch.exercise.controller.dto.VersionControlDto;
+import com.branch.exercise.controller.dto.RepoDto;
+import com.branch.exercise.controller.dto.VersionControlUserDto;
 import com.branch.exercise.gateway.GithubGateway;
-import com.branch.exercise.gateway.dto.GithubRepoDto;
-import com.branch.exercise.gateway.dto.GithubUserDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,29 +21,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
-public class GithubServiceTest {
+public class VersionControlServiceTest {
 
     @Mock
     private GithubGateway githubGateway;
 
     @InjectMocks
-    private GithubService githubService;
+    private VersionControlService versionControlService;
 
-    private GithubUserDto githubUserDto;
+    private VersionControlUserDto versionControlUserDto;
 
-    private List<GithubRepoDto> githubRepoDtos = new ArrayList<>();
+    private List<RepoDto> repoDtos = new ArrayList<>();
 
     @BeforeEach
     public void setUp() {
         setDefaultObjects();
 
-        when(githubGateway.getGithubUserForUsername(eq("user"))).thenReturn(githubUserDto);
-        when(githubGateway.getGithubReposForUser(eq("user"))).thenReturn(githubRepoDtos);
+        when(githubGateway.getGithubUserForUsername(eq("user"))).thenReturn(versionControlUserDto);
+        when(githubGateway.getGithubReposForUser(eq("user"))).thenReturn(repoDtos);
     }
 
     @Test
-    public void gettingUserDataSetsUserInformationCorrectly() {
-        VersionControlDto result = githubService.getUserData("user");
+    public void gettingUserDataReturnssUserInformationCorrectly() {
+        VersionControlUserDto result = versionControlService.getUserData("user");
 
         verify(githubGateway).getGithubUserForUsername(eq("user"));
 
@@ -60,7 +59,7 @@ public class GithubServiceTest {
 
     @Test
     public void gettingUserDataSetsUserRepoInformationCorrectlyForEachReturnedRepo() {
-        VersionControlDto result = githubService.getUserData("user");
+        VersionControlUserDto result = versionControlService.getUserData("user");
 
         verify(githubGateway).getGithubReposForUser(eq("user"));
 
@@ -71,24 +70,24 @@ public class GithubServiceTest {
     }
 
     private void setDefaultObjects() {
-        githubUserDto = new GithubUserDto();
-        githubUserDto.login = "octocat";
-        githubUserDto.name = "The Octocat";
-        githubUserDto.avatarUrl = "https://avatars3.githubusercontent.com/u/583231?v=4";
-        githubUserDto.geoLocation = "San Francisco";
-        githubUserDto.email = "octocat@github.com";
-        githubUserDto.url = "https://github.com/octocat";
-        githubUserDto.createdAt = OffsetDateTime.of(LocalDateTime.of(2011, 1, 25, 18, 44, 36), ZoneOffset.UTC);;
+        versionControlUserDto = new VersionControlUserDto();
+        versionControlUserDto.userName = "octocat";
+        versionControlUserDto.displayName = "The Octocat";
+        versionControlUserDto.avatar = "https://avatars3.githubusercontent.com/u/583231?v=4";
+        versionControlUserDto.geoLocation = "San Francisco";
+        versionControlUserDto.email = "octocat@github.com";
+        versionControlUserDto.url = "https://github.com/octocat";
+        versionControlUserDto.createdAt = LocalDateTime.of(2011, 1, 25, 18, 44, 36);
 
-        GithubRepoDto githubRepoDto1 = new GithubRepoDto();
+        RepoDto githubRepoDto1 = new RepoDto();
         githubRepoDto1.name = "repo1";
-        githubRepoDto1.htmlUrl = "https://github.com/octocat/repo-1";
+        githubRepoDto1.url = "https://github.com/octocat/repo-1";
 
-        GithubRepoDto githubRepoDto2 = new GithubRepoDto();
+        RepoDto githubRepoDto2 = new RepoDto();
         githubRepoDto2.name = "repo2";
-        githubRepoDto2.htmlUrl = "https://github.com/octocat/repo-2";
+        githubRepoDto2.url = "https://github.com/octocat/repo-2";
 
-        githubRepoDtos.add(githubRepoDto1);
-        githubRepoDtos.add(githubRepoDto2);
+        repoDtos.add(githubRepoDto1);
+        repoDtos.add(githubRepoDto2);
     }
 }

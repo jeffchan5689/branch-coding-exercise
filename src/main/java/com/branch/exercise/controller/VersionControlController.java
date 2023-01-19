@@ -1,7 +1,8 @@
 package com.branch.exercise.controller;
 
-import com.branch.exercise.controller.dto.VersionControlDto;
-import com.branch.exercise.service.GithubService;
+import com.branch.exercise.controller.dto.VersionControlUserDto;
+import com.branch.exercise.service.GithubServerErrorException;
+import com.branch.exercise.service.VersionControlService;
 import com.branch.exercise.service.NoGithubUserException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -18,19 +19,32 @@ public class VersionControlController {
     Logger logger = LoggerFactory.getLogger(VersionControlController.class);
 
     @Autowired
-    GithubService githubService;
+    VersionControlService versionControlService;
 
     @GetMapping("/user/{userName}")
-    public ResponseEntity<VersionControlDto> getUserDataForUsername(@PathVariable("userName") String username) {
+    public ResponseEntity<VersionControlUserDto> getUserDataForUsername(@PathVariable("userName") String username) {
 
         logger.info(String.format("Getting version control data for %s", username));
 
-        return ResponseEntity.ok(githubService.getUserData(username));
+        return ResponseEntity.ok(versionControlService.getUserData(username));
     }
 
     @ExceptionHandler({NoGithubUserException.class})
-    public ResponseEntity<String> exceptionHandler(HttpServletRequest req, NoGithubUserException e) {
+    public ResponseEntity<String> noUserFoundExceptionHandler(HttpServletRequest req, NoGithubUserException e) {
         logger.error("Non-existent github user inputted", e);
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler({GithubServerErrorException.class})
+    public ResponseEntity<String> serverErrorExceptionHandler(HttpServletRequest req, NoGithubUserException e) {
+        logger.error("Non-existent github user inputted", e);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler({NoGithubUserException.class})
+    public ResponseEntity<String> clientErrorExceptionHandler(HttpServletRequest req, NoGithubUserException e) {
+        logger.error("Non-existent github user inputted", e);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
 }

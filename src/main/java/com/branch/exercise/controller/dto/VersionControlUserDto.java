@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class VersionControlDto {
+public class VersionControlUserDto {
 
     @JsonProperty("user_name")
     public String userName;
